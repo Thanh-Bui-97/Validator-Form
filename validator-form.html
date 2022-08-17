@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="./validator-form.css">
+
+   <!-- font icons -->
+   <script src="https://kit.fontawesome.com/9f03ee609a.js" crossorigin="anonymous"></script>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+   <title>Validator-Form</title>
+</head>
+<body>
+   <form class="main" action="" id="sign-in-form">
+      <fieldset class="form-header">
+         <div class="form-header-title">
+            <span class="material-symbols-outlined">vpn_key</span>
+            <h1>Log in</h1>
+            <i class="fa-solid fa-xmark"></i>
+         </div>
+         <p>Become a member - you'll enjoy exclusive deals, offers, invites and rewards.</p>
+      </fieldset>
+      <hr/>
+      <fieldset class="form-main">
+         <div class="form-main-input form-email">
+            <label for="email">Email</label>
+            <input type="email" class="form-invalid" id="email" placeholder="info@pixsellz.io" />
+            <span class="form-main-message"></span>
+         </div>
+         <div class="form-main-input form-password">
+            <label for="email">Password</label>
+            <input type="password" class="form-invalid" name="password" id="password" placeholder="Enter your password"/>
+            <span class="form-main-message"></span>
+         </div>
+         <div class="form-main-remember">
+            <input type="checkbox" name="remember" id="remember"/>
+            <label for="remember">Remember me</label>
+            <a href="#">Forgot password?</a>
+         </div>
+         <div class="form-main-submit">
+            <input type="submit" value="Log in"/>
+         </div>
+      </fieldset>
+      <hr/>
+      <fieldset class="form-footer">
+         <p>Don't have an account?</p>
+         <a href="#">Sign up</a>
+      </fieldset>
+   </form>
+
+<script src="./validator-form.js"> //link tới thư viện form tự define
+   //Ý tưởng là tạo ra 1 file JS có thể đọc được hầu hết các form
+   //    không chỉ trang này mà có thể tái sử dụng ở trang khác
+   //    Và khi sử dụng chỉ cần link tới file css rồi gọi hàm ở đây
+   //    giống import vào đây để sài
+</script>
+<script> //import vào đây sài
+   //Chỉ cần gọi tới hàm Validator đã tạo sẵn ở flie js trên
+   //để chạy JS tại sign-in-form
+   //hoặc bất cứ loại form nào khác như sign-up-form...
+
+   //Ý tưởng: Hàm Validator nhận đối số là object
+   //có cặp key/value 1 là loại form muốn dùng
+   //                 2 là quy định cho các trường thông tin nhập
+   //                 Nhập values là css selectors
+   Validator ({
+      form: '#sign-in-form',
+      error: '.form-main-message',
+      rules: [
+         // Validator.isRequired(),     //Vì function cùng bản chất vs object
+         Validator.isEmail('#email'), //nên có thể gọi được như object
+         Validator.minLength('#password', 7)
+      ]
+   })
+</script>
+
+</body>
+</html>
