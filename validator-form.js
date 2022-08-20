@@ -1,13 +1,33 @@
 function Validator(object) {
    //object {
       //Nhét cái chung vào form, cái riêng vào rules
-   //    form: '';
-   //    rules: [isRequired, isEmail, minLength];
+      //    form: '';
+      //    rules: [isRequired, isEmail, minLength...];
    //}
+   //Chú ý: trường hợp 1 input nhưng có nhiều rules
+   //vd: Validator.isEmail('#email');
+   //    Validator.required('#email');
+   // ý tưởng: tạo Object chứa các rules với key/values là css selector/array các test
+   var selectorRules = {};
 
    var formElement = document.querySelector(object.form);
    if (formElement) {
       object.rules.forEach(function (rule) {
+         // Nếu không phải mảng thì khai báo nó thành mảng,
+         // nếu đã là mảng thì push cái mới vào mảng đó
+         if (typeof selectorRules[rule.selector] !== 'object') {
+            selectorRules[rule.selector] = [rule.test];
+         } else {
+            selectorRules[rule.selector].push(rule.test);
+         }
+         // or
+         // if (Array.isArray(selectorRules[rule.selector])) {
+         //    selectorRules[rule.selector].push(rule.test);
+         // } else {
+         //    selectorRules[rule.selector] = [rule.test];
+         // }
+
+
          const inputTag = formElement.querySelector(rule.selector);
 
          if (inputTag) {
@@ -32,8 +52,20 @@ function Validator(object) {
    };
 
    function validate (inputTag, rule) {
-      const warningMessage = rule.test(inputTag.value);
       const messageTag = inputTag.parentElement.querySelector(object.error);
+      var warningMessage; // = rule.test(inputTag.value); 'cũ'
+
+      //Lấy các rule của từng selector dưới dạng array các function tương ứng
+      var rules = selectorRules[rule.selector];
+
+      //Đọc qua từng rules của từng selector
+      //khi có lỗi thì break khỏi loop, nếu không nó sẽ chỉ chạy cái cuối
+      for (var i = 0; i < rules.length; i++) {
+         warningMessage = rules[i](inputTag.value); //'mới'
+         if (warningMessage) break;
+      };
+      console.log(rule)
+
 
       if (warningMessage) {
          messageTag.innerText = warningMessage;
@@ -50,7 +82,7 @@ Validator.isRequired = function (selector, customOutputMessage) {
       selector: selector,
       test: function (value) {  // nới này để kiểm tra bắt buộc nhập
          return value.trim() ? undefined :
-         customOutputMessage || "Something was wrong, please try againt";
+         customOutputMessage || "You have to provide a values for this";
       }
    };
 };

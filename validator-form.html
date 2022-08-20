@@ -74,8 +74,9 @@
       form: '#sign-in-form',
       error: '.form-main-message',
       rules: [
-         Validator.isRequired(),     //Vì function cùng bản chất vs object
+         Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
          Validator.isEmail('#email'), //nên có thể gọi được như object
+         Validator.isRequired('#password'),
          Validator.minLength('#password', 7),
          Validator.passwordConfirmation('#password-comfirmation', function () {
             return document.querySelector('#sign-in-form #password').value;
