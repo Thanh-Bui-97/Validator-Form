@@ -24,14 +24,19 @@
       </fieldset>
       <hr/>
       <fieldset class="form-main">
-         <div class="form-main-input form-email">
+         <div class="form-main-input">
             <label for="email">Email</label>
             <input type="email" class="form-invalid" id="email" placeholder="info@pixsellz.io" />
             <span class="form-main-message"></span>
          </div>
-         <div class="form-main-input form-password">
-            <label for="email">Password</label>
+         <div class="form-main-input">
+            <label for="password">Password</label>
             <input type="password" class="form-invalid" name="password" id="password" placeholder="Enter your password"/>
+            <span class="form-main-message"></span>
+         </div>
+         <div class="form-main-input">
+            <label for="password-comfirmation">Comfirm Password</label>
+            <input type="password" class="form-invalid" name="password-comfirmation" id="password-comfirmation" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
          </div>
          <div class="form-main-remember">
@@ -69,9 +74,12 @@
       form: '#sign-in-form',
       error: '.form-main-message',
       rules: [
-         // Validator.isRequired(),     //Vì function cùng bản chất vs object
+         Validator.isRequired(),     //Vì function cùng bản chất vs object
          Validator.isEmail('#email'), //nên có thể gọi được như object
-         Validator.minLength('#password', 7)
+         Validator.minLength('#password', 7),
+         Validator.passwordConfirmation('#password-comfirmation', function () {
+            return document.querySelector('#sign-in-form #password').value;
+         }, 'The values has erorr, please try again')
       ]
    })
 </script>

@@ -8,7 +8,6 @@ function Validator(object) {
    var formElement = document.querySelector(object.form);
    if (formElement) {
       object.rules.forEach(function (rule) {
-         console.log(rule);
          const inputTag = formElement.querySelector(rule.selector);
 
          if (inputTag) {
@@ -29,7 +28,6 @@ function Validator(object) {
                inputTag.parentElement.classList.remove('invalid');
             }
          }
-         console.log(inputTag);
       });
    };
 
@@ -47,32 +45,45 @@ function Validator(object) {
    };
 };
 
-Validator.isRequired = function (selector) {
+Validator.isRequired = function (selector, customOutputMessage) {
    return {
       selector: selector,
       test: function (value) {  // nới này để kiểm tra bắt buộc nhập
-         return value.trim() ? undefined : "Something was wrong, please try againt";
+         return value.trim() ? undefined :
+         customOutputMessage || "Something was wrong, please try againt";
       }
    };
 };
 
-Validator.isEmail = function (selector) {
+Validator.isEmail = function (selector, customOutputMessage) {
    return {
       selector: selector,
       test: function (value) {  // Nơi này để kiểm tra Email phải có gì
          const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
          return emailRegex.test(value) ? undefined :
-         "May be you forgot @ somewhere, please try againt";
+         customOutputMessage || "May be you forgot @ somewhere, please try againt";
       }
    };
 };
 
-Validator.minLength = function (selector, min) {
+Validator.minLength = function (selector, min, customOutputMessage) {
    return {
       selector: selector,
       test: function (value) {
          return value.length >= min ? undefined :
-         `At least ${min} characters, please!`;
+         customOutputMessage || `At least ${min} characters, please!`;
+      }
+   };
+};
+
+Validator.passwordConfirmation = function (selector, valueConfirmation, customOutputMessage) {
+   return {
+      selector: selector,
+      test: function (value) {
+         console.log(value);
+         console.log(valueConfirmation());
+         return value === valueConfirmation() ? undefined :
+         customOutputMessage || `Please this values have to be the same as above!`;
       }
    };
 };
