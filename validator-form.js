@@ -4,36 +4,43 @@ function Validator(object) {
       //    form: '';
       //    rules: [isRequired, isEmail, minLength...];
    //}
+
    //Chú ý: trường hợp 1 input nhưng có nhiều rules
    //vd: Validator.isEmail('#email');
    //    Validator.required('#email');
    // ý tưởng: tạo Object chứa các rules với key/values là css selector/array các test
-   var selectorRules = {};
+   var selectedRules = {};
 
+   //lấy form cần validate
    var formElement = document.querySelector(object.form);
    if (formElement) {
+
+      //1. Xử lý từng ô input
+      //lặp qua mỗi rules và xử lý từng rules (event...)
       object.rules.forEach(function (rule) {
+
          // Nếu không phải mảng thì khai báo nó thành mảng,
          // nếu đã là mảng thì push cái mới vào mảng đó
-         if (typeof selectorRules[rule.selector] !== 'object') {
-            selectorRules[rule.selector] = [rule.test];
+         if (typeof selectedRules[rule.selector] !== 'object') {
+            selectedRules[rule.selector] = [rule.test];
+            //selectedRules = {
+            //   #email: [f, f],
+            //   #password: [f, f]
+            //...
+            //};
          } else {
-            selectorRules[rule.selector].push(rule.test);
-         }
-         // or
-         // if (Array.isArray(selectorRules[rule.selector])) {
-         //    selectorRules[rule.selector].push(rule.test);
-         // } else {
-         //    selectorRules[rule.selector] = [rule.test];
-         // }
-
+            selectedRules[rule.selector].push(rule.test);
+         };
 
          const inputTag = formElement.querySelector(rule.selector);
 
          if (inputTag) {
-            //Hiện lỗi khi blur khỏi input
-            //mà nhập khoảng trắng hoặc không nhập
-            inputTag.onblur = function () {
+
+            //hàm validate sẽ chạy khi user nhập không đúng
+            //trong hàm validate là logic xử lý chung các loại lỗi xuất hiện
+            //còn đối với từng lỗi của từng selector thì chạy xử lý riêng
+
+            inputTag.onblur = function () {  //event khi blur mouse ra ngoài input
                //Đứng từ đây lấy Values của inputTag
                //chạy hàm test, hàm test nhận đối số là values
                //hàm test kiểm tra xem nếu có lỗi thì thực hiện hàm
@@ -42,29 +49,50 @@ function Validator(object) {
             }
 
             //khi đang nhập - tức không thỏa điều kiện warningMessage
-            inputTag.oninput = function() {
+            inputTag.oninput = function() {  //event khi đang nhập trong input
                const messageTag = inputTag.parentElement.querySelector(object.error);
                messageTag.innerText = '';
                inputTag.parentElement.classList.remove('invalid');
             }
          }
       });
+
+      //2. Xử lý submit
+      formElement.onsubmit = function(e) {
+         e.preventDefault();
+         var formData = {};
+         var isValidForm = true;
+
+         object.rules.forEach(function (rule) {
+            const inputTag = formElement.querySelector(rule.selector);
+            if (!validate(inputTag, rule)) {
+               isValidForm = false;
+            }
+         });
+         if (isValidForm) {
+            for (let i in selectedRules) {
+               const inputTag = formElement.querySelector(i);
+               formData[inputTag.name] = inputTag.value;
+            }
+            console.log(formData);
+         };
+      };
+
    };
 
    function validate (inputTag, rule) {
       const messageTag = inputTag.parentElement.querySelector(object.error);
       var warningMessage; // = rule.test(inputTag.value); 'cũ'
 
-      //Lấy các rule của từng selector dưới dạng array các function tương ứng
-      var rules = selectorRules[rule.selector];
+      //Lấy các rule của từng selector, dưới dạng array chứa các function tương ứng
+      var testArray = selectedRules[rule.selector]; //giờ nó là Array các hàm test
 
-      //Đọc qua từng rules của từng selector
-      //khi có lỗi thì break khỏi loop, nếu không nó sẽ chỉ chạy cái cuối
-      for (var i = 0; i < rules.length; i++) {
-         warningMessage = rules[i](inputTag.value); //'mới'
+      // xử lý qua từng rules của từng selector
+      //khi  thì break khỏi loop, nếu không nó sẽ chỉ chạy cái cuối
+      for (var i = 0; i < testArray.length; i++) {
+         warningMessage = testArray[i](inputTag.value); //'mới'
          if (warningMessage) break;
       };
-      console.log(rule)
 
 
       if (warningMessage) {
@@ -74,6 +102,8 @@ function Validator(object) {
          messageTag.innerText = '';
          inputTag.parentElement.classList.remove('invalid');
       }
+
+      return !warningMessage; //boolean value
    };
 };
 
@@ -112,8 +142,6 @@ Validator.passwordConfirmation = function (selector, valueConfirmation, customOu
    return {
       selector: selector,
       test: function (value) {
-         console.log(value);
-         console.log(valueConfirmation());
          return value === valueConfirmation() ? undefined :
          customOutputMessage || `Please this values have to be the same as above!`;
       }

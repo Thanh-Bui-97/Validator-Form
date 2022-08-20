@@ -26,7 +26,7 @@
       <fieldset class="form-main">
          <div class="form-main-input">
             <label for="email">Email</label>
-            <input type="email" class="form-invalid" id="email" placeholder="info@pixsellz.io" />
+            <input type="email" class="form-invalid" name="email" id="email" placeholder="info@pixsellz.io" />
             <span class="form-main-message"></span>
          </div>
          <div class="form-main-input">
@@ -78,6 +78,7 @@
          Validator.isEmail('#email'), //nên có thể gọi được như object
          Validator.isRequired('#password'),
          Validator.minLength('#password', 7),
+         Validator.isRequired('#password-comfirmation'),
          Validator.passwordConfirmation('#password-comfirmation', function () {
             return document.querySelector('#sign-in-form #password').value;
          }, 'The values has erorr, please try again')
