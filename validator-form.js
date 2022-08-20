@@ -50,15 +50,15 @@ function Validator(object) {
 
             //khi đang nhập - tức không thỏa điều kiện warningMessage
             inputTag.oninput = function() {  //event khi đang nhập trong input
-               const messageTag = inputTag.parentElement.querySelector(object.error);
+               const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
                messageTag.innerText = '';
-               inputTag.parentElement.classList.remove('invalid');
+               getParentElement(inputTag, object.formInput).classList.remove('invalid');
             }
          }
       });
 
       //2. Xử lý submit
-      formElement.onsubmit = function(e) {
+      formElement.onsubmit = function(e) {   //event khi submit
          e.preventDefault();
          var formData = {};
          var isValidForm = true;
@@ -73,15 +73,24 @@ function Validator(object) {
             for (let i in selectedRules) {
                const inputTag = formElement.querySelector(i);
                formData[inputTag.name] = inputTag.value;
-            }
+            };
             console.log(formData);
          };
       };
-
    };
 
+   function getParentElement(childElement, parentElementSelector) {
+      while (childElement.parentElement) {
+         if (childElement.parentElement.matches(parentElementSelector)) {
+            return childElement.parentElement;
+         }
+         childElement = childElement.parentElement;
+      }
+   };
+
+
    function validate (inputTag, rule) {
-      const messageTag = inputTag.parentElement.querySelector(object.error);
+      const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
       var warningMessage; // = rule.test(inputTag.value); 'cũ'
 
       //Lấy các rule của từng selector, dưới dạng array chứa các function tương ứng
@@ -97,10 +106,10 @@ function Validator(object) {
 
       if (warningMessage) {
          messageTag.innerText = warningMessage;
-         inputTag.parentElement.classList.add('invalid');
+         getParentElement(inputTag, object.formInput).classList.add('invalid');
       } else {
          messageTag.innerText = '';
-         inputTag.parentElement.classList.remove('invalid');
+         getParentElement(inputTag, object.formInput).classList.remove('invalid');
       }
 
       return !warningMessage; //boolean value
@@ -138,11 +147,11 @@ Validator.minLength = function (selector, min, customOutputMessage) {
    };
 };
 
-Validator.passwordConfirmation = function (selector, valueConfirmation, customOutputMessage) {
+Validator.isConfirmed = function (selector, getConfirmValue, customOutputMessage) {
    return {
       selector: selector,
       test: function (value) {
-         return value === valueConfirmation() ? undefined :
+         return value === getConfirmValue() ? undefined :
          customOutputMessage || `Please this values have to be the same as above!`;
       }
    };

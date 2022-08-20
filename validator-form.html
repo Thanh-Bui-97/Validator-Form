@@ -24,29 +24,29 @@
       </fieldset>
       <hr/>
       <fieldset class="form-main">
-         <div class="form-main-input">
+         <fieldset class="form-main-add-input">
             <label for="email">Email</label>
             <input type="email" class="form-invalid" name="email" id="email" placeholder="info@pixsellz.io" />
             <span class="form-main-message"></span>
-         </div>
-         <div class="form-main-input">
+         </fieldset>
+         <fieldset class="form-main-add-input">
             <label for="password">Password</label>
             <input type="password" class="form-invalid" name="password" id="password" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
-         </div>
-         <div class="form-main-input">
+         </fieldset>
+         <fieldset class="form-main-add-input">
             <label for="password-comfirmation">Comfirm Password</label>
             <input type="password" class="form-invalid" name="password-comfirmation" id="password-comfirmation" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
-         </div>
-         <div class="form-main-remember">
+         </fieldset>
+         <fieldset class="form-main-remember">
             <input type="checkbox" name="remember" id="remember"/>
             <label for="remember">Remember me</label>
             <a href="#">Forgot password?</a>
-         </div>
-         <div class="form-main-submit">
+         </fieldset>
+         <fieldset class="form-main-submit">
             <input type="submit" value="Log in"/>
-         </div>
+         </fieldset>
       </fieldset>
       <hr/>
       <fieldset class="form-footer">
@@ -73,13 +73,14 @@
    Validator ({
       form: '#sign-in-form',
       error: '.form-main-message',
+      formInput: '.form-main-add-input',
       rules: [
          Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
          Validator.isEmail('#email'), //nên có thể gọi được như object
          Validator.isRequired('#password'),
          Validator.minLength('#password', 7),
          Validator.isRequired('#password-comfirmation'),
-         Validator.passwordConfirmation('#password-comfirmation', function () {
+         Validator.isConfirmed('#password-comfirmation', function () {
             return document.querySelector('#sign-in-form #password').value;
          }, 'The values has erorr, please try again')
       ]

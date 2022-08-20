@@ -82,7 +82,7 @@ body{
    color: #424242be;
    font-size: 12px;
 }
-.form-main-input {
+.form-main-add-input {
    margin-bottom: 7px;
    display: flex;
    flex-direction: column;
@@ -90,36 +90,36 @@ body{
    align-items: flex-start;
    font-weight: 600;
 }
-.form-main-input label {
+.form-main-add-input label {
    margin-bottom: 5px;
    font-weight: 800;
 }
-.form-main-input label::after {
+.form-main-add-input label::after {
    content: '*';
    color: #ea4c89;
    margin-left: 4px;
 }
 
-.form-main-input input {
+.form-main-add-input input {
    width: 100%;
    padding: 7px;
    border-radius: 6px;
    border: 1px solid #ddd;
 }
-.form-main-input input:hover::-ms-reveal {
+.form-main-add-input input:hover::-ms-reveal {
    color: #003cff;
    text-shadow: rgba(0, 60, 255, 0.5);
 
 }
-.form-main-input.invalid .form-invalid {
+.form-main-add-input.invalid .form-invalid {
    border-color: #f33a58;
 }
-.form-main-input.invalid .form-main-message {
+.form-main-add-input.invalid .form-main-message {
    color: #f33a58;
    font-style: italic;
 }
-.form-main-input input:focus,
-.form-main-input input:hover
+.form-main-add-input input:focus,
+.form-main-add-input input:hover
 {
    border-color: #003cff;
    box-shadow: rgba(0, 60, 255, 0.5) 0px 3px 4px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
