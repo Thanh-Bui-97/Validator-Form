@@ -32,29 +32,30 @@ function Validator(object) {
             selectedRules[rule.selector].push(rule.test);
          };
 
-         const inputTag = formElement.querySelector(rule.selector);
+         const inputTags = formElement.querySelectorAll(rule.selector);
+         Array.from(inputTags).forEach(function (inputTag) {
+            if (inputTag) {
+               //hàm validate sẽ chạy khi user nhập không đúng
+               //trong hàm validate là logic xử lý chung các loại lỗi xuất hiện
+               //còn đối với từng lỗi của từng selector thì chạy xử lý riêng
 
-         if (inputTag) {
+               inputTag.onblur = function () {  //event khi blur mouse ra ngoài input
+                  //Đứng từ đây lấy Values của inputTag
+                  //chạy hàm test, hàm test nhận đối số là values
+                  //hàm test kiểm tra xem nếu có lỗi thì thực hiện hàm
+                  // test(value) => Nên tách ra 1 hàm riêng ở dưới để xứ lý
+                  validate(inputTag, rule);
+               };
 
-            //hàm validate sẽ chạy khi user nhập không đúng
-            //trong hàm validate là logic xử lý chung các loại lỗi xuất hiện
-            //còn đối với từng lỗi của từng selector thì chạy xử lý riêng
+               //khi đang nhập - tức không thỏa điều kiện warningMessage
+               inputTag.oninput = function() {  //event khi đang nhập trong input
+                  const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
+                  messageTag.innerText = '';
+                  getParentElement(inputTag, object.formInput).classList.remove('invalid');
+               };
+            };
+         });
 
-            inputTag.onblur = function () {  //event khi blur mouse ra ngoài input
-               //Đứng từ đây lấy Values của inputTag
-               //chạy hàm test, hàm test nhận đối số là values
-               //hàm test kiểm tra xem nếu có lỗi thì thực hiện hàm
-               // test(value) => Nên tách ra 1 hàm riêng ở dưới để xứ lý
-               validate(inputTag, rule);
-            }
-
-            //khi đang nhập - tức không thỏa điều kiện warningMessage
-            inputTag.oninput = function() {  //event khi đang nhập trong input
-               const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
-               messageTag.innerText = '';
-               getParentElement(inputTag, object.formInput).classList.remove('invalid');
-            }
-         }
       });
 
       //2. Xử lý submit
@@ -71,8 +72,23 @@ function Validator(object) {
          });
          if (isValidForm) {
             for (let i in selectedRules) {
-               const inputTag = formElement.querySelector(i);
-               formData[inputTag.name] = inputTag.value;
+               console.log(i);
+               const inputTags = formElement.querySelectorAll(i);
+               console.log(inputTags);
+
+               Array.from(inputTags).forEach(function (inputTag) {
+                  switch (inputTag.type) {
+                     case 'checkbox':
+                     case  'radio':
+                        if (inputTag.checked) {
+                           formData[inputTag.name] = inputTag.value;
+                        };
+                        break;
+                     default:
+                        formData[inputTag.name] = inputTag.value;
+                        break;
+                  };
+               });
             };
             console.log(formData);
          };
@@ -88,7 +104,6 @@ function Validator(object) {
       }
    };
 
-
    function validate (inputTag, rule) {
       const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
       var warningMessage; // = rule.test(inputTag.value); 'cũ'
@@ -99,10 +114,21 @@ function Validator(object) {
       // xử lý qua từng rules của từng selector
       //khi  thì break khỏi loop, nếu không nó sẽ chỉ chạy cái cuối
       for (var i = 0; i < testArray.length; i++) {
-         warningMessage = testArray[i](inputTag.value); //'mới'
+         //Tuy nhiên mỗi loại input có 1 kiểu lấy dữ liệu khác nhau
+         //Nên tùy inputTag mà get value
+         switch (inputTag.type) {
+            case 'checkbox':
+            case  'radio':
+               warningMessage = testArray[i](
+                  getParentElement(inputTag, object.formInput)       //Đứng từ thẻ cha
+                  .querySelector(rule.selector + ':checked'));  //get value của thẻ được checked
+               break;
+            default:
+               warningMessage = testArray[i](inputTag.value);
+               break;
+         };
          if (warningMessage) break;
       };
-
 
       if (warningMessage) {
          messageTag.innerText = warningMessage;
@@ -120,7 +146,7 @@ Validator.isRequired = function (selector, customOutputMessage) {
    return {
       selector: selector,
       test: function (value) {  // nới này để kiểm tra bắt buộc nhập
-         return value.trim() ? undefined :
+         return value ? undefined :
          customOutputMessage || "You have to provide a values for this";
       }
    };

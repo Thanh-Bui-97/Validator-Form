@@ -82,7 +82,7 @@ body{
    color: #424242be;
    font-size: 12px;
 }
-.form-main-add-input {
+.form-main-group {
    margin-bottom: 7px;
    display: flex;
    flex-direction: column;
@@ -90,49 +90,52 @@ body{
    align-items: flex-start;
    font-weight: 600;
 }
-.form-main-add-input label {
+.form-main-group label {
    margin-bottom: 5px;
    font-weight: 800;
 }
-.form-main-add-input label::after {
+.form-main-group label::after {
    content: '*';
    color: #ea4c89;
    margin-left: 4px;
 }
 
-.form-main-add-input input {
+.form-main-group input {
    width: 100%;
    padding: 7px;
    border-radius: 6px;
    border: 1px solid #ddd;
 }
-.form-main-add-input input:hover::-ms-reveal {
+.form-main-group input:hover::-ms-reveal {
    color: #003cff;
    text-shadow: rgba(0, 60, 255, 0.5);
 
 }
-.form-main-add-input.invalid .form-invalid {
+.form-main-group.invalid .form-invalid {
    border-color: #f33a58;
 }
-.form-main-add-input.invalid .form-main-message {
+.form-main-group.invalid .form-main-message {
    color: #f33a58;
    font-style: italic;
 }
-.form-main-add-input input:focus,
-.form-main-add-input input:hover
+.form-main-group input:focus,
+.form-main-group input:hover
 {
    border-color: #003cff;
    box-shadow: rgba(0, 60, 255, 0.5) 0px 3px 4px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
    outline: none;
    transition: all linear 0.2s;
 }
-.form-main-remember {
+.form-main-group.checked {
    display: flex;
-   justify-content: flex-start;
-   align-items: center;
+   flex-direction: row;
+   justify-content: center;
+   /* align-items: center; */
    margin: 10px 0 18px 0;
+   flex-wrap: wrap;
 }
-.form-main-remember input {
+
+.form-main-group.checked input {
    width: 16px;
    height: 16px;
    margin-right: 5px;
@@ -141,15 +144,19 @@ body{
    outline: 1px solid rgba(221, 221, 221, 0.26);
 }
 
-.form-main-remember label {
+.form-main-group.checked label{
    flex: 1;
    font-weight: 800;
 }
-.form-main-remember a {
+.form-main-group.checked a {
+   margin-top: 3px;
    text-decoration: none;
    color: #424242be;
 }
-.form-main-remember a:hover {
+.form-main-group.checked span {
+   flex: 1;
+}
+.form-main-group.checked a:hover {
    color: #383737;
 }
 .form-main-submit input {

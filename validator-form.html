@@ -24,25 +24,34 @@
       </fieldset>
       <hr/>
       <fieldset class="form-main">
-         <fieldset class="form-main-add-input">
+         <fieldset class="form-main-group">
             <label for="email">Email</label>
             <input type="email" class="form-invalid" name="email" id="email" placeholder="info@pixsellz.io" />
             <span class="form-main-message"></span>
          </fieldset>
-         <fieldset class="form-main-add-input">
+         <fieldset class="form-main-group">
             <label for="password">Password</label>
             <input type="password" class="form-invalid" name="password" id="password" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
          </fieldset>
-         <fieldset class="form-main-add-input">
+         <fieldset class="form-main-group">
             <label for="password-comfirmation">Comfirm Password</label>
             <input type="password" class="form-invalid" name="password-comfirmation" id="password-comfirmation" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
          </fieldset>
-         <fieldset class="form-main-remember">
+         <fieldset class="form-main-group checked">
             <input type="checkbox" name="remember" id="remember"/>
             <label for="remember">Remember me</label>
             <a href="#">Forgot password?</a>
+         </fieldset>
+         <fieldset class="form-main-group checked">
+               <input type="radio" name="gender" value="male" id="male"/>
+               <label for="remember">Male</label>
+               <input type="radio" name="gender" value="female" id="female" />
+               <label for="remember">Female</label>
+               <input type="radio" name="gender" value="other" id="other" />
+               <label for="remember">Other</label>
+               <span class="form-main-message"></span>
          </fieldset>
          <fieldset class="form-main-submit">
             <input type="submit" value="Log in"/>
@@ -73,7 +82,7 @@
    Validator ({
       form: '#sign-in-form',
       error: '.form-main-message',
-      formInput: '.form-main-add-input',
+      formInput: '.form-main-group',
       rules: [
          Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
          Validator.isEmail('#email'), //nên có thể gọi được như object
@@ -82,7 +91,8 @@
          Validator.isRequired('#password-comfirmation'),
          Validator.isConfirmed('#password-comfirmation', function () {
             return document.querySelector('#sign-in-form #password').value;
-         }, 'The values has erorr, please try again')
+         }, 'The values has erorr, please try again'),
+         Validator.isRequired('input[name="gender"]')
       ]
    })
 </script>
