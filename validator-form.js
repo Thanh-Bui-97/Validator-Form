@@ -1,3 +1,27 @@
+// Nguyên tắc khi sử dụng thư viện:
+//1. thẻ input thì phải có name và value, để có thể get
+//2. Mẫu gọi:
+// Validator ({
+//    form: '#sign-in-form',                       --Tên form --
+//    error: '.form-main-message',                 --Thẻ Warning Message --
+//    formInput: '.form-main-group',               --Thẻ cha của từng nhóm input --
+//    rules: [
+//       Validator.isRequired('#email'),           --Các rules/Cách gọi --
+//       Validator.isEmail('#email'),              --Validator.isRequired('-CSS selector-', thuộc tính riêng , customOutputMessage)
+//       Validator.isRequired('#remember'),        --                                      VD: number - nếu là minLength -
+//       Validator.isRequired('#province'),        --                                      VD: callback - nếu là isConfirmed -
+//       Validator.isRequired('#password'),        --                                         -callback return ra values của input cần confirmate
+//       Validator.minLength('#password', 7),
+//       Validator.isRequired('#password-comfirmation'),
+//       Validator.isConfirmed('#password-comfirmation', function () {
+//          return document.querySelector('#sign-in-form #password').value;
+//       }, 'The values has erorr, please try again'),
+//       Validator.isRequired('input[name="gender"]')
+//    ]
+// })
+//
+//
+
 function Validator(object) {
    //object {
       //Nhét cái chung vào form, cái riêng vào rules
@@ -19,9 +43,10 @@ function Validator(object) {
       //lặp qua mỗi rules và xử lý từng rules (event...)
       object.rules.forEach(function (rule) {
 
-         // Nếu không phải mảng thì khai báo nó thành mảng,
-         // nếu đã là mảng thì push cái mới vào mảng đó
+         //1.1. Tập hợp tất cả rules nhét vào object selectedRules
          if (typeof selectedRules[rule.selector] !== 'object') {
+            // Nếu không phải mảng thì khai báo nó thành mảng,
+            // nếu đã là mảng thì push cái mới vào mảng đó
             selectedRules[rule.selector] = [rule.test];
             //selectedRules = {
             //   #email: [f, f],
@@ -31,32 +56,45 @@ function Validator(object) {
          } else {
             selectedRules[rule.selector].push(rule.test);
          };
-
-         const inputTags = formElement.querySelectorAll(rule.selector);
-         Array.from(inputTags).forEach(function (inputTag) {
-            if (inputTag) {
-               //hàm validate sẽ chạy khi user nhập không đúng
-               //trong hàm validate là logic xử lý chung các loại lỗi xuất hiện
-               //còn đối với từng lỗi của từng selector thì chạy xử lý riêng
-
-               inputTag.onblur = function () {  //event khi blur mouse ra ngoài input
-                  //Đứng từ đây lấy Values của inputTag
-                  //chạy hàm test, hàm test nhận đối số là values
-                  //hàm test kiểm tra xem nếu có lỗi thì thực hiện hàm
-                  // test(value) => Nên tách ra 1 hàm riêng ở dưới để xứ lý
-                  validate(inputTag, rule);
-               };
-
-               //khi đang nhập - tức không thỏa điều kiện warningMessage
-               inputTag.oninput = function() {  //event khi đang nhập trong input
-                  const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
-                  messageTag.innerText = '';
-                  getParentElement(inputTag, object.formInput).classList.remove('invalid');
-               };
-            };
-         });
-
       });
+
+      //1.2. Chạy qua từng rule trong selectedRules,
+      //Xử lý từng ô input
+      for (const ruleCssSelector in selectedRules) {
+
+         const inputTags = formElement.querySelectorAll(ruleCssSelector);
+         let ruleTest = selectedRules[ruleCssSelector];
+
+         for (const testFunction of ruleTest) {
+            Array.from(inputTags).forEach(function (inputTag) {
+               if (inputTag) {
+                  //hàm validate sẽ chạy khi user nhập không đúng
+                  //trong hàm validate là logic xử lý chung các loại lỗi xuất hiện
+                  //còn đối với từng lỗi của từng selector thì chạy xử lý riêng
+
+                  inputTag.onblur = function () {  //event khi blur mouse ra ngoài input
+                     //Đứng từ đây lấy Values của inputTag
+                     //chạy hàm test, hàm test nhận đối số là values
+                     //hàm test kiểm tra xem nếu có lỗi thì thực hiện hàm
+                     // test(value) => Nên tách ra 1 hàm riêng ở dưới để xứ lý
+                     validate(inputTag, testFunction, ruleCssSelector);
+                  };
+
+                  //khi đang nhập - tức không thỏa điều kiện warningMessage
+                  inputTag.oninput = function() {  //event khi đang nhập trong input
+                     const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
+                     messageTag.innerText = '';
+                     getParentElement(inputTag, object.formInput).classList.remove('invalid');
+                  };
+
+                  //Khi thay đổi thông tin, dành cho thẻ select
+                  inputTag.onchange = function () {
+                     validate(inputTag, testFunction, ruleCssSelector);
+                  }
+               };
+            });
+         }
+      };
 
       //2. Xử lý submit
       formElement.onsubmit = function(e) {   //event khi submit
@@ -64,22 +102,36 @@ function Validator(object) {
          var formData = {};
          var isValidForm = true;
 
-         object.rules.forEach(function (rule) {
-            const inputTag = formElement.querySelector(rule.selector);
-            if (!validate(inputTag, rule)) {
-               isValidForm = false;
+         //Chạy validate hết các test của các rule
+         for (const ruleCssSelector in selectedRules) {
+
+            let ruleTest = selectedRules[ruleCssSelector];
+            const inputTags = formElement.querySelectorAll(ruleCssSelector);
+
+            for (const testFunction of ruleTest) {
+               Array.from(inputTags).forEach(function (inputTag) {
+                  if (!validate(inputTag, testFunction, ruleCssSelector)) {
+                     isValidForm = false;
+                  };
+               })
             }
-         });
+         };
+
          if (isValidForm) {
             for (let i in selectedRules) {
-               console.log(i);
                const inputTags = formElement.querySelectorAll(i);
-               console.log(inputTags);
-
                Array.from(inputTags).forEach(function (inputTag) {
+
                   switch (inputTag.type) {
                      case 'checkbox':
-                     case  'radio':
+                        if (inputTag.checked) {
+                           if (!Array.isArray(formData[inputTag.name])) {
+                              formData[inputTag.name] = [];
+                           }
+                           formData[inputTag.name].push(inputTag.value)
+                        };
+                        break;
+                     case 'radio':
                         if (inputTag.checked) {
                            formData[inputTag.name] = inputTag.value;
                         };
@@ -104,30 +156,21 @@ function Validator(object) {
       }
    };
 
-   function validate (inputTag, rule) {
+   function validate (inputTag, testFunction, ruleCssSelector) {
       const messageTag = getParentElement(inputTag, object.formInput).querySelector(object.error);
       var warningMessage; // = rule.test(inputTag.value); 'cũ'
 
-      //Lấy các rule của từng selector, dưới dạng array chứa các function tương ứng
-      var testArray = selectedRules[rule.selector]; //giờ nó là Array các hàm test
-
-      // xử lý qua từng rules của từng selector
-      //khi  thì break khỏi loop, nếu không nó sẽ chỉ chạy cái cuối
-      for (var i = 0; i < testArray.length; i++) {
-         //Tuy nhiên mỗi loại input có 1 kiểu lấy dữ liệu khác nhau
-         //Nên tùy inputTag mà get value
-         switch (inputTag.type) {
-            case 'checkbox':
-            case  'radio':
-               warningMessage = testArray[i](
-                  getParentElement(inputTag, object.formInput)       //Đứng từ thẻ cha
-                  .querySelector(rule.selector + ':checked'));  //get value của thẻ được checked
-               break;
-            default:
-               warningMessage = testArray[i](inputTag.value);
-               break;
-         };
-         if (warningMessage) break;
+      switch (inputTag.type) {
+         case 'checkbox':
+         case 'radio':
+            warningMessage = testFunction(
+               getParentElement(inputTag, object.formInput)       //Đứng từ thẻ cha
+                  .querySelector(ruleCssSelector + ':checked')
+            );
+            break;
+         default:
+            warningMessage = testFunction(inputTag.value);
+            break;
       };
 
       if (warningMessage) {
@@ -136,9 +179,9 @@ function Validator(object) {
       } else {
          messageTag.innerText = '';
          getParentElement(inputTag, object.formInput).classList.remove('invalid');
-      }
+      };
 
-      return !warningMessage; //boolean value
+      return !warningMessage; //-->boolean type
    };
 };
 

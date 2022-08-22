@@ -24,26 +24,42 @@
       </fieldset>
       <hr/>
       <fieldset class="form-main">
+         <!-- email -->
          <fieldset class="form-main-group">
             <label for="email">Email</label>
             <input type="email" class="form-invalid" name="email" id="email" placeholder="info@pixsellz.io" />
             <span class="form-main-message"></span>
          </fieldset>
+         <!-- password -->
          <fieldset class="form-main-group">
             <label for="password">Password</label>
             <input type="password" class="form-invalid" name="password" id="password" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
          </fieldset>
+         <!-- password confirmation -->
          <fieldset class="form-main-group">
             <label for="password-comfirmation">Comfirm Password</label>
             <input type="password" class="form-invalid" name="password-comfirmation" id="password-comfirmation" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
          </fieldset>
+         <!-- remember -->
          <fieldset class="form-main-group checked">
             <input type="checkbox" name="remember" id="remember"/>
             <label for="remember">Remember me</label>
+            <span class="form-main-message"></span>
             <a href="#">Forgot password?</a>
          </fieldset>
+         <!-- province -->
+         <fieldset class="form-main-group">
+            <label for="province">Tỉnh/TP</label>
+            <select id="province" type="select" name="province">
+               <option value="">--Chọn Tỉnh/TP--</option>
+               <option value="HN">Hà Nội</option>
+               <option value="HCM">Hồ Chí Minh</option>
+            </select>
+            <span class="form-main-message"></span>
+         </fieldset>
+         <!-- gender -->
          <fieldset class="form-main-group checked">
                <input type="radio" name="gender" value="male" id="male"/>
                <label for="remember">Male</label>
@@ -53,6 +69,7 @@
                <label for="remember">Other</label>
                <span class="form-main-message"></span>
          </fieldset>
+         <!-- submit -->
          <fieldset class="form-main-submit">
             <input type="submit" value="Log in"/>
          </fieldset>
@@ -86,6 +103,8 @@
       rules: [
          Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
          Validator.isEmail('#email'), //nên có thể gọi được như object
+         Validator.isRequired('#remember'),
+         Validator.isRequired('#province'),
          Validator.isRequired('#password'),
          Validator.minLength('#password', 7),
          Validator.isRequired('#password-comfirmation'),
@@ -99,3 +118,4 @@
 
 </body>
 </html>
+
