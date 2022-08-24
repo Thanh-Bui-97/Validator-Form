@@ -36,39 +36,14 @@
             <input type="password" class="form-invalid" name="password" id="password" placeholder="Enter your password"/>
             <span class="form-main-message"></span>
          </fieldset>
-         <!-- password confirmation -->
-         <fieldset class="form-main-group">
-            <label for="password-comfirmation">Comfirm Password</label>
-            <input type="password" class="form-invalid" name="password-comfirmation" id="password-comfirmation" placeholder="Enter your password"/>
-            <span class="form-main-message"></span>
-         </fieldset>
+
          <!-- remember -->
          <fieldset class="form-main-group checked">
             <input type="checkbox" name="remember" id="remember"/>
             <label for="remember">Remember me</label>
-            <span class="form-main-message"></span>
-            <a href="#">Forgot password?</a>
+            <a href="#" onclick="openPasswordForm()">Forgot password?</a>
          </fieldset>
-         <!-- province -->
-         <fieldset class="form-main-group">
-            <label for="province">Tỉnh/TP</label>
-            <select id="province" type="select" name="province">
-               <option value="">--Chọn Tỉnh/TP--</option>
-               <option value="HN">Hà Nội</option>
-               <option value="HCM">Hồ Chí Minh</option>
-            </select>
-            <span class="form-main-message"></span>
-         </fieldset>
-         <!-- gender -->
-         <fieldset class="form-main-group checked">
-               <input type="radio" name="gender" value="male" id="male"/>
-               <label for="remember">Male</label>
-               <input type="radio" name="gender" value="female" id="female" />
-               <label for="remember">Female</label>
-               <input type="radio" name="gender" value="other" id="other" />
-               <label for="remember">Other</label>
-               <span class="form-main-message"></span>
-         </fieldset>
+
          <!-- submit -->
          <fieldset class="form-main-submit">
             <input type="submit" value="Log in"/>
@@ -80,6 +55,8 @@
          <a href="#">Sign up</a>
       </fieldset>
    </form>
+
+
 
 <script src="./validator-form.js"> //link tới thư viện form tự define
    //Ý tưởng là tạo ra 1 file JS có thể đọc được hầu hết các form
@@ -103,17 +80,75 @@
       rules: [
          Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
          Validator.isEmail('#email'), //nên có thể gọi được như object
-         Validator.isRequired('#remember'),
-         Validator.isRequired('#province'),
+         // Validator.isRequired('#remember'),
+         // Validator.isRequired('#province'),
          Validator.isRequired('#password'),
          Validator.minLength('#password', 7),
-         Validator.isRequired('#password-comfirmation'),
-         Validator.isConfirmed('#password-comfirmation', function () {
-            return document.querySelector('#sign-in-form #password').value;
-         }, 'The values has erorr, please try again'),
-         Validator.isRequired('input[name="gender"]')
+         // Validator.isRequired('#password-comfirmation'),
+         // Validator.isConfirmed('#password-comfirmation', function () {
+         //    return document.querySelector('#sign-in-form #password').value;
+         // }, 'The values has erorr, please try again'),
+         // Validator.isRequired('input[name="gender"]')
       ]
    })
+</script>
+<!-- forgot password form-->
+<script>
+   Validator ({
+      form: '#forgot-password-form',
+      error: '.form-main-message',
+      formInput: '.form-main-group',
+      rules: [
+         Validator.isRequired('#email-forgot-password-form'),
+         Validator.isEmail('#email-forgot-password-form'),
+      ]
+   })
+
+   const body = document.querySelector('body');
+   const overlay = document.createElement('div');
+   overlay.classList.add('overlay');
+
+   function openPasswordForm () {
+      overlay.innerHTML = `
+            <form class="main forgot-password" action="" id="forgot-password-form">
+            <fieldset class="form-header">
+               <div class="form-header-title">
+                  <span class="material-symbols-outlined">lock</span>
+                  <h1>Forgot password?</h1>
+                  <i onclick="closePasswordForm()" class="fa-solid fa-xmark"></i>
+               </div>
+               <p>Please enter the email address you use to create your account, and we'll send you  a link to reset your password.</p>
+            </fieldset>
+            <hr/>
+            <fieldset class="form-main">
+               <!-- email -->
+               <fieldset class="form-main-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-invalid" name="email" id="email-forgot-password-form" placeholder="info@pixsellz.io" />
+                  <span class="form-main-message"></span>
+               </fieldset>
+               <!-- submit -->
+               <fieldset class="form-main-submit">
+                  <input type="submit" value="Submit"/>
+               </fieldset>
+            </fieldset>
+            </form>
+         `;
+      body.appendChild(overlay);
+      const forgotForm = overlay.querySelector('.main.forgot-password');
+      forgotForm.style.animation = 'pop-up 1s ease forwards';
+      overlay.style.animation = 'overlay-on 1s linear forwards';
+
+   };
+   function closePasswordForm () {
+      const forgotForm = overlay.querySelector('.main.forgot-password');
+      forgotForm.style.animation = 'pop-down 1s ease forwards';
+      overlay.style.animation = 'overlay-off 1s linear forwards';
+      setTimeout(() => {
+         body.removeChild(overlay);
+      }, 2000);
+
+   };
 </script>
 
 </body>

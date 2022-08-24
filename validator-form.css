@@ -6,12 +6,14 @@
 body{
    background-color: #f4f4f4;
    font-family: sans-serif;
+   display: flex;
+   width: 100%;
+   height: 100vh;
 }
 .main {
    width: 40%;
    max-width: 450px;
    min-width: 300px;
-   margin: 0;
    box-sizing: border-box;
    position: absolute;
    left: 50%;
@@ -51,23 +53,27 @@ body{
    margin-left: 5px;
    padding-top: 5px;
 }
-.form-header-title i, span {
+.form-header-title span {
    padding: 5px;
    border-radius: 50%;
-   box-sizing: border-box;
-}
-.form-header-title span {
    background-color: rgba(150, 241, 150, 0.555);
    color: rgb(4, 105, 17);
    outline: none;
    border: none;
 }
 .form-header-title i {
+   padding: 5px;
+   border-radius: 50%;
    width: 24px;
    height: 24px;
    text-align: center;
    border: 1px solid #ddd;
    box-sizing: border-box;
+}
+.form-header-title i:hover {
+   background-color: #383737;
+   color: #f4f4f4;
+   transition: all 0.3s;
 }
 .form-header p {
    max-width: 90%;
@@ -109,6 +115,16 @@ body{
    padding: 7px;
    border-radius: 6px;
    border: 1px solid #ddd;
+}
+.form-main-group input::-webkit-input-placeholder {
+   color: rgb(161, 161, 161);
+}
+.form-main-group input::-moz-input-placeholder {
+   color: rgb(161, 161, 161);
+}
+.form-main-group input:hover::placeholder {
+   font-weight: 600;
+   color: #383737;
 }
 .form-main-group input:hover::-ms-reveal {
    color: #003cff;
@@ -155,7 +171,7 @@ body{
 .form-main-group.checked a {
    margin-top: 3px;
    text-decoration: none;
-   color: #424242be;
+   color: rgb(161, 161, 161);
 }
 .form-main-group.checked span {
    flex: 1;
@@ -195,4 +211,77 @@ body{
 }
 .form-footer a:hover {
    color: #003cff;
+}
+
+/* password form */
+.overlay {
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.6);
+}
+.main.forgot-password {
+   min-width: 270px;
+   max-width: 350px;
+   max-height: 320px;
+   position: absolute;
+   transition: all linear;
+
+   z-index: 100;
+   /* animation: functionName effect duration-function delay iteration-count direction fill-mode; */
+}
+
+@keyframes pop-up {
+   from {
+      opacity: 0;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0);
+   }
+   to {
+      opacity: 1;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(1.0);
+   }
+}
+
+@keyframes pop-down {
+   from {
+      opacity: 1;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(1.0);
+   }
+   to {
+      opacity: 0;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0);
+   }
+}
+
+@keyframes overlay-on {
+   from {
+      opacity: 0;
+   }
+   to {
+      opacity: 1;
+   }
+}
+
+@keyframes overlay-off {
+   from {
+      opacity: 1;
+   }
+   to {
+      opacity: 0;
+   }
+}
+
+.main.forgot-password .form-header-title {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-wrap: nowrap;
 }
