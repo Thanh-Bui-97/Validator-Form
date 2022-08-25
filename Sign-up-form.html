@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="./validator-form.css">
+
+   <!-- font icons -->
+   <script src="https://kit.fontawesome.com/9f03ee609a.js" crossorigin="anonymous"></script>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+   <title>sign-up-form</title>
+</head>
+<body>
+   <form class="main" action="" id="sign-up-form">
+      <fieldset class="form-header">
+         <div class="form-header-title">
+            <span class="material-symbols-outlined">assignment_turned_in</span>
+            <h1>Sign up</h1>
+            <i class="fa-solid fa-xmark"></i>
+         </div>
+         <p>Become a member - you'll enjoy exclusive deals, offers, invites and rewards.</p>
+      </fieldset>
+      <hr/>
+      <fieldset class="form-main">
+         <!-- email -->
+         <fieldset class="form-main-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-invalid" name="email" id="email" placeholder="example@gmail.com"/>
+            <span class="form-main-message"></span>
+         </fieldset>
+         <!-- Create the password -->
+         <fieldset class="form-main-group">
+            <label for="password">Create a password</label>
+            <input type="password" class="form-invalid" name="password" id="password" placeholder="at least 8 characters"/>
+            <span class="form-main-message"></span>
+         </fieldset>
+         <!-- Confirm the password -->
+         <fieldset class="form-main-group">
+            <label for="confirm-password">Confirm password</label>
+            <input type="password" class="form-invalid" name="confirm-password" id="confirm-password" placeholder="at least 8 characters"/>
+            <span class="form-main-message"></span>
+         </fieldset>
+         <!-- Date of birth -->
+         <fieldset class="form-main-group">
+            <label for="time">Date of birth</label>
+            <input type="date" class="form-invalid" name="date-of-birth" id="date-of-birth"/>
+            <span class="form-main-message"></span>
+         </fieldset>
+
+         <!-- subcribe -->
+         <fieldset class="form-main-group checked">
+            <input type="checkbox" name="subcribe" id="subcribe"/>
+            <label for="subcribe">Subcribe to newsletter</label>
+         </fieldset>
+
+         <!-- submit -->
+         <fieldset class="form-main-submit">
+            <input type="submit" value="Become a member"/>
+         </fieldset>
+      </fieldset>
+      <hr/>
+      <fieldset class="form-footer">
+         <p>Already have an account?</p>
+         <a href="./Sign-in-form.html">Log in</a>
+      </fieldset>
+   </form>
+
+   <script src="./validator-form.js"></script>
+   <script>
+      Validator({
+         form: '#sign-up-form',
+         error: '.form-main-message',
+         formInput: '.form-main-group',
+         rules: [
+            Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
+            Validator.isEmail('#email'), //nên có thể gọi được như object
+            Validator.isRequired('#password'),
+            Validator.minLength('#password', 8),
+            Validator.isRequired('#confirm-password'),
+            Validator.isConfirmed('#confirm-password', function () {
+               return document.querySelector('#sign-up-form #password').value}),
+            Validator.isRequired('#date-of-birth'),
+            // }, 'The values has erorr, please try again'),
+            // Validator.isRequired('input[name="gender"]')
+         ]
+      });
+   </script>
+</body>
+</html>

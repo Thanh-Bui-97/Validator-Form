@@ -10,6 +10,8 @@ body{
    width: 100%;
    height: 100vh;
 }
+
+ /* Sign in form*/
 .main {
    width: 40%;
    max-width: 450px;
@@ -284,4 +286,26 @@ body{
    justify-content: center;
    align-items: center;
    flex-wrap: nowrap;
+}
+
+/* Sign up form */
+input[type="date"]::-webkit-datetime-edit {
+   color: rgb(161, 161, 161);
+   text-transform: uppercase;
+   font-weight: 500;
+}
+input[type="date"]:hover::-webkit-datetime-edit {
+   color: #383737;
+   font-weight: 600;
+   transform: scale(1.05);
+   transform-origin: left;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+   font-size: 17px;
+   opacity: 0;
+   transition: all linear 0.3s;
+}
+input[type="date"]:hover::-webkit-calendar-picker-indicator {
+   opacity: 1;
+   transform: scale(1.1);
 }
