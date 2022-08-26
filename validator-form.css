@@ -116,7 +116,7 @@ body{
    width: 100%;
    padding: 7px;
    border-radius: 6px;
-   border: 1px solid #ddd;
+   border: 0.5px solid #ddd;
 }
 .form-main-group input::-webkit-input-placeholder {
    color: rgb(161, 161, 161);
@@ -190,6 +190,7 @@ body{
    border-radius: 6px;
    color: aliceblue;
    font-size: 16px;
+   font-weight: 500;
    margin-bottom: 10px;
 }
 .form-main-submit input:hover {
@@ -289,6 +290,19 @@ body{
 }
 
 /* Sign up form */
+.form-main-group .security {
+   width: calc(100% + 3px);
+   height: 2.5px;
+   margin-top: 9px;
+   display: flex;
+   border-radius: 5px;
+}
+.form-main-group .security div {
+   flex: 1;
+   margin-right: 3px;
+   background-color: #e7e7e7;
+}
+
 input[type="date"]::-webkit-datetime-edit {
    color: rgb(161, 161, 161);
    text-transform: uppercase;

@@ -35,7 +35,14 @@
             <label for="password">Create a password</label>
             <input type="password" class="form-invalid" name="password" id="password" placeholder="at least 8 characters"/>
             <span class="form-main-message"></span>
+            <div class="security">
+               <div></div>
+               <div></div>
+               <div></div>
+               <div></div>
+            </div>
          </fieldset>
+
          <!-- Confirm the password -->
          <fieldset class="form-main-group">
             <label for="confirm-password">Confirm password</label>
@@ -77,7 +84,7 @@
             Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
             Validator.isEmail('#email'), //nên có thể gọi được như object
             Validator.isRequired('#password'),
-            Validator.minLength('#password', 8),
+            Validator.isPassword('#password', 8),
             Validator.isRequired('#confirm-password'),
             Validator.isConfirmed('#confirm-password', function () {
                return document.querySelector('#sign-up-form #password').value}),
