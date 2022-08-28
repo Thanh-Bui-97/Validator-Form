@@ -1,27 +1,3 @@
-// Nguyên tắc khi sử dụng thư viện:
-//1. thẻ input thì phải có name và value, để có thể get
-//2. Mẫu gọi:
-// Validator ({
-//    form: '#sign-in-form',                       --Tên form --
-//    error: '.form-main-message',                 --Thẻ Warning Message --
-//    formInput: '.form-main-group',               --Thẻ cha của từng nhóm input --
-//    rules: [
-//       Validator.isRequired('#email'),           --Các rules/Cách gọi --
-//       Validator.isEmail('#email'),              --Validator.isRequired('-CSS selector-', thuộc tính riêng , customOutputMessage)
-//       Validator.isRequired('#remember'),        --                                      VD: number - nếu là minLength -
-//       Validator.isRequired('#province'),        --                                      VD: callback - nếu là isConfirmed -
-//       Validator.isRequired('#password'),        --                                         -callback return ra values của input cần confirmate
-//       Validator.minLength('#password', 7),
-//       Validator.isRequired('#password-comfirmation'),
-//       Validator.isConfirmed('#password-comfirmation', function () {
-//          return document.querySelector('#sign-in-form #password').value;
-//       }, 'The values has erorr, please try again'),
-//       Validator.isRequired('input[name="gender"]')
-//    ]
-// })
-//
-//
-
 function Validator(object) {
    //object {
       //Nhét cái chung vào form, cái riêng vào rules
