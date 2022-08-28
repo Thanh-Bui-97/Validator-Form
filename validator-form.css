@@ -290,17 +290,22 @@ body{
 }
 
 /* Sign up form */
-.form-main-group .security {
+.form-main-group .password-strength {
    width: calc(100% + 3px);
    height: 2.5px;
    margin-top: 9px;
    display: flex;
    border-radius: 5px;
 }
-.form-main-group .security div {
+
+.form-main-group .password-strength div {
    flex: 1;
    margin-right: 3px;
    background-color: #e7e7e7;
+}
+.form-main-group .password-strength div.on-strength {
+   background-color: rgb(4, 105, 17);
+   transition: ease 0.5s;
 }
 
 input[type="date"]::-webkit-datetime-edit {

@@ -83,13 +83,16 @@
          // Validator.isRequired('#remember'),
          // Validator.isRequired('#province'),
          Validator.isRequired('#password'),
-         Validator.minLength('#password', 7),
+         Validator.isPassword('#password', 7),
          // Validator.isRequired('#password-comfirmation'),
          // Validator.isConfirmed('#password-comfirmation', function () {
          //    return document.querySelector('#sign-in-form #password').value;
          // }, 'The values has erorr, please try again'),
          // Validator.isRequired('input[name="gender"]')
-      ]
+      ],
+      onSubmit: function(formData) {
+         console.log(formData)
+      }
    })
 </script>
 <!-- forgot password form-->
@@ -101,7 +104,10 @@
       rules: [
          Validator.isRequired('#email-forgot-password-form'),
          Validator.isEmail('#email-forgot-password-form'),
-      ]
+      ],
+      onSubmit: function(formData) {
+         console.log(formData)
+      }
    })
 
    const body = document.querySelector('body');

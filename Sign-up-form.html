@@ -35,7 +35,7 @@
             <label for="password">Create a password</label>
             <input type="password" class="form-invalid" name="password" id="password" placeholder="at least 8 characters"/>
             <span class="form-main-message"></span>
-            <div class="security">
+            <div class="password-strength">
                <div></div>
                <div></div>
                <div></div>
@@ -83,7 +83,6 @@
          rules: [
             Validator.isRequired('#email'),     //Vì function cùng bản chất vs object
             Validator.isEmail('#email'), //nên có thể gọi được như object
-            Validator.isRequired('#password'),
             Validator.isPassword('#password', 8),
             Validator.isRequired('#confirm-password'),
             Validator.isConfirmed('#confirm-password', function () {
@@ -91,8 +90,57 @@
             Validator.isRequired('#date-of-birth'),
             // }, 'The values has erorr, please try again'),
             // Validator.isRequired('input[name="gender"]')
-         ]
+         ],
+         onSubmit: function(formData) {
+         console.log(formData)
+         }
       });
+
+      // password-strength
+      //Ý tưởng: tạo biến strength lever,
+      //dựa trên mức độ biến để add/remove class trên thẻ div
+      //Nên trước khi add class trên thẻ div thì phải remove toàn bộ
+      //sau đó đọc qua các thẻ div, add class lên, số class và số div = số lever
+      const password = document.getElementById('password');
+      const passwordStrength = document.querySelectorAll('.form-main-group .password-strength div');
+      const minLength = 8;
+      let strengthLever;
+      const regExpWeak = /[a-z]/;
+      const regExpMedium = /\d+/;
+      const regExpStrong = /.[!,@,#,$,%,^,&,*,(,)]/;
+
+      password.oninput = function(e) {
+         if (password.value.length > 0) {
+            strengthLever = 0;
+
+            if (regExpMedium.test(password.value.match(/\d+/g)))  {
+               strengthLever += 1;
+            }
+            if (password.value.length >= minLength)  {
+               strengthLever += 1;
+            }
+            if (regExpWeak.test(password.value))  {
+               strengthLever += 1;
+            }
+            if (regExpStrong.test(password.value))  {
+               strengthLever += 1;
+            }
+
+            for (let i = 0; i < passwordStrength.length; i++) {
+               passwordStrength[i].classList.remove('on-strength');
+            }
+
+            if(strengthLever > passwordStrength.length) {
+               strengthLever = passwordStrength.length;
+            }
+            for (let i = 0; i < strengthLever; i++) {
+               passwordStrength[i].classList.add('on-strength');
+            }
+         } else {
+            strengthLever = 0;
+         }
+      }
+
    </script>
 </body>
 </html>

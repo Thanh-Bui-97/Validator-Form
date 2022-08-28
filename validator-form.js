@@ -142,8 +142,8 @@ function Validator(object) {
                   };
                });
             };
-            console.log(formData);
          };
+         object.onSubmit(formData);
       };
    };
 
@@ -206,63 +206,29 @@ Validator.isEmail = function (selector, customOutputMessage) {
    };
 };
 
-// Validator.minLength = function (selector, min, customOutputMessage) {
-//    return {
-//       selector: selector,
-//       test: function (value) {
-//          return value.length >= min ? undefined :
-//          customOutputMessage || `At least ${min} characters, please!`;
-//       }
-//    };
-// };
-Validator.isPassword = function (selector, min, customOutputMessage) {
+Validator.isPassword = function (selector, min, getPasswordStrength) {
    return {
       selector: selector,
       test: function (value) {
          let validated = true;
-         let passwordstrength = 0;
 
          if (value.length < min) {
             validated = false;
             return `Must have at least ${min} characters!`;
-         } else {
-            passwordstrength += 1;
          };
          if (!/\d+/g.test(value.match(/\d+/g)))  {
             validated = false;
             return `Must have at least one digit.`;
-         } else {
-            passwordstrength += 1;
          };
          if (!/[A-Z]/.test(value)) {
             validated = false;
             return `Must have at least one upper case`;
-         } else {
-            passwordstrength += 1;
          };
-
-         // if (!/[a-z]/.test(value)) {
-         //    validated = false;
-         //    return `Must have at least one lower case`;
-         // } else {
-         //    passwordstrength += 1;
-         // };
-         // if (/[^0-9a-zA-Z]/.test(value)) {
-         //    validated = false;
-         //    return `Deo biet`;
-         // } else {
-         //    passwordstrength += 1;
-         // };
 
          if (validated) {
             return undefined;
          }
-         // if (!/^[a-zA-Z0-9]$/.test(value)) {
-         //    validated = false;
-         // } else {
-         //    passwordstrength += 1;
-         // };
-      }
+      },
    };
 };
 
