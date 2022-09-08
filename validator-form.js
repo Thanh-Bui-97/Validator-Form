@@ -73,8 +73,8 @@ function Validator(object) {
       };
 
       //2. Xử lý submit
-      formElement.onsubmit = function(e) {   //event khi submit
-         e.preventDefault();
+      formElement.onsubmit = function(event) {   //event khi submit
+         event.preventDefault();
          var formData = {};
          var isValidForm = true;
 
